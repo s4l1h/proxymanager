@@ -8,6 +8,21 @@ import (
 	"github.com/akmyazilim/proxymanager"
 )
 
+func ExampleManager_GiveMeProxyURL() {
+
+	plist := proxymanager.New(3)
+	plist.Add(proxymanager.Proxy{
+		Host:     "192.168.1.11",
+		Port:     "1000",
+		Username: "user",
+		Password: "pass",
+	})
+	url := plist.GiveMeProxyURL()
+	fmt.Println(url)
+	// Output: http://user:pass@192.168.1.11:1000
+
+}
+
 func ExampleManager_Add() {
 
 	plist := proxymanager.New(3)

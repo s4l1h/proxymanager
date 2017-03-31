@@ -1,6 +1,13 @@
 package proxymanager
 
-import "sync"
+import (
+	"fmt"
+	"net/url"
+	"sync"
+)
+
+// DefaultType default proxy type
+const DefaultType = "http"
 
 // New return new proxy manager
 func New(limit int) *Manager {
@@ -19,6 +26,7 @@ type Proxy struct {
 	Port     string `json:"port"`
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Type     string `json:"type"`
 }
 
 // Manager  object
@@ -43,6 +51,9 @@ func (p *Manager) GetWriteIndex() int {
 
 // Add new Proxy to Proxy List
 func (p *Manager) Add(proxy Proxy) {
+	if proxy.Type == "" {
+		proxy.Type = DefaultType
+	}
 	p.List[p.GetWriteIndex()] = proxy
 }
 func (p *Manager) remove(host string) {
@@ -82,4 +93,20 @@ func (p *Manager) GiveMeProxy() Proxy {
 	}
 
 	return p.List[p.ReadIndex]
+}
+
+// GiveMeProxyURL return proxy url
+func (p *Manager) GiveMeProxyURL() *url.URL {
+	proxy := p.GiveMeProxy()
+	userinfo := new(url.Userinfo)
+	resultURL := &url.URL{}
+	if proxy.Username != "" && proxy.Password != "" {
+		userinfo = url.UserPassword(proxy.Username, proxy.Password)
+	}
+
+	resultURL.Scheme = proxy.Type
+	resultURL.User = userinfo
+	resultURL.Host = fmt.Sprintf("%s:%s", proxy.Host, proxy.Port)
+
+	return resultURL
 }
