@@ -8,6 +8,25 @@ import (
 	"github.com/akmyazilim/proxymanager"
 )
 
+func TestAddFromURL(t *testing.T) {
+
+	u := "socks5://username:password@host:1020"
+	plist := proxymanager.New(3)
+	plist.AddFromURL(u)
+	url := plist.GiveMeProxyURL().String()
+
+	if url != u {
+		t.Errorf("AddFromURL error %s!=%s", url, u)
+	}
+}
+func ExampleManager_AddFromURL() {
+
+	plist := proxymanager.New(3)
+	plist.AddFromURL("http://username:password@192.168.1.11:1020")
+	proxy := plist.GiveMeProxy()
+	fmt.Printf("Host:%s Port:%s Username:%s Password:%s Type:%s", proxy.Host, proxy.Port, proxy.Username, proxy.Password, proxy.Type)
+	// Output: Host:192.168.1.11 Port:1020 Username:username Password:password Type:http
+}
 func ExampleManager_GiveMeProxyURL() {
 
 	plist := proxymanager.New(3)

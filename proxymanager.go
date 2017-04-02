@@ -56,6 +56,24 @@ func (p *Manager) Add(proxy Proxy) {
 	}
 	p.List[p.GetWriteIndex()] = proxy
 }
+
+// AddFromURL add new proxy from url
+func (p *Manager) AddFromURL(purl string) {
+	u, _ := url.Parse(purl)
+	proxy := Proxy{
+		Host: u.Hostname(),
+		Port: u.Port(),
+		Type: u.Scheme,
+	}
+	if u.User != nil {
+		proxy.Username = u.User.Username()
+		if p, s := u.User.Password(); s == true {
+			proxy.Password = p
+		}
+	}
+
+	p.Add(proxy)
+}
 func (p *Manager) remove(host string) {
 	for i, proxy := range p.List {
 		if proxy.Host == host {
