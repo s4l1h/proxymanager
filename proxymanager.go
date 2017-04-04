@@ -57,8 +57,7 @@ func (p *Manager) Add(proxy Proxy) {
 	p.List[p.GetWriteIndex()] = proxy
 }
 
-// AddFromURL add new proxy from url
-func (p *Manager) AddFromURL(purl string) {
+func (p *Manager) parseURL(purl string) Proxy {
 	u, _ := url.Parse(purl)
 	proxy := Proxy{
 		Host: u.Hostname(),
@@ -71,7 +70,12 @@ func (p *Manager) AddFromURL(purl string) {
 			proxy.Password = p
 		}
 	}
+	return proxy
+}
 
+// AddFromURL add new proxy from url
+func (p *Manager) AddFromURL(purl string) {
+	proxy := p.parseURL(purl)
 	p.Add(proxy)
 }
 func (p *Manager) remove(host string) {
@@ -92,6 +96,27 @@ func (p *Manager) Remove(r interface{}) {
 	case Proxy:
 		p.remove(r.(Proxy).Host)
 	}
+}
+
+//Has proxy in the list
+func (p *Manager) Has(r interface{}) bool {
+	host := ""
+	port := ""
+	switch r.(type) {
+	case string:
+		result := p.parseURL(r.(string))
+		host = result.Host
+		port = result.Port
+	case Proxy:
+		host = r.(Proxy).Host
+		port = r.(Proxy).Port
+	}
+	for _, proxy := range p.List {
+		if proxy.Host == host && port == proxy.Port {
+			return true
+		}
+	}
+	return false
 }
 
 // GiveMeProxy return Proxy from Proxy List

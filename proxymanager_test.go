@@ -8,6 +8,26 @@ import (
 	"github.com/akmyazilim/proxymanager"
 )
 
+func ExampleManager_Has() {
+	u := "http://1.1.1.1:1010"
+	p := proxymanager.Proxy{
+		Host: "10.0.0.1",
+		Port: "1080",
+	}
+	plist := proxymanager.New(3)
+	plist.AddFromURL(u)
+	if plist.Has(u) == true {
+		fmt.Printf("%s Exists", u)
+	}
+	if plist.Has("http://proxyhost:333") == true {
+		fmt.Println("http://proxyhost:333 Exists")
+	}
+	if plist.Has(p) == true {
+		fmt.Printf("Exists %s:%s", p.Host, p.Port)
+	}
+	// Output: http://1.1.1.1:1010 Exists
+
+}
 func TestAddFromURL(t *testing.T) {
 
 	u := "socks5://username:password@host:1020"
