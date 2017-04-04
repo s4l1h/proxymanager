@@ -79,13 +79,22 @@ func (p *Manager) AddFromURL(purl string) {
 	p.Add(proxy)
 }
 func (p *Manager) remove(host string) {
+	p.Lock()
+	defer p.Unlock()
+	// Copy Map
+	list := make(map[int]Proxy)
+	for key, value := range p.List {
+		list[key] = value
+	}
+	// Find and remove map
 	for i, proxy := range p.List {
 		if proxy.Host == host {
-			delete(p.List, i)
+			delete(list, i)
 			break
 		}
 	}
-	p.WriteIndex = len(p.List)
+	p.WriteIndex = len(list)
+	p.List = list
 }
 
 // Remove proxy
