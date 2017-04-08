@@ -39,22 +39,15 @@ type Manager struct {
 	Limit      int
 }
 
-// GetWriteIndex return proxy list write index
-func (p *Manager) GetWriteIndex() int {
-	p.Lock()         // Diğer goroutines'lerin erişmesini engelleyelim.
-	defer p.Unlock() // İşlem bittikten sonra erişim engelini kaldıralım
-	defer func(p *Manager) {
-		p.WriteIndex++
-	}(p)
-	return p.WriteIndex
-}
-
 // Add new Proxy to Proxy List
 func (p *Manager) Add(proxy Proxy) {
+	p.Lock()
+	defer p.Unlock()
 	if proxy.Type == "" {
 		proxy.Type = DefaultType
 	}
-	p.List[p.GetWriteIndex()] = proxy
+	p.List[p.WriteIndex] = proxy
+	p.WriteIndex = len(p.List)
 }
 
 func (p *Manager) parseURL(purl string) Proxy {
@@ -81,20 +74,17 @@ func (p *Manager) AddFromURL(purl string) {
 func (p *Manager) remove(host string) {
 	p.Lock()
 	defer p.Unlock()
-	// Copy Map
-	list := make(map[int]Proxy)
-	for key, value := range p.List {
-		list[key] = value
-	}
-	// Find and remove map
-	for i, proxy := range p.List {
-		if proxy.Host == host {
-			delete(list, i)
-			break
+	new := make(map[int]Proxy)
+	index := 0
+	for _, proxy := range p.List {
+		if proxy.Host != host {
+			new[index] = proxy
 		}
+		index++
 	}
-	p.WriteIndex = len(list)
-	p.List = list
+	p.List = new
+	p.WriteIndex = len(new)
+
 }
 
 // Remove proxy

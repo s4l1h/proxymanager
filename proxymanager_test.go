@@ -122,7 +122,7 @@ func TestProxy(t *testing.T) {
 			})
 	}
 	if plist.WriteIndex != total {
-		t.Error("WriteIndex Error")
+		t.Errorf("WriteIndex Error: %d!=%d", plist.WriteIndex, total)
 	}
 	if len(plist.List) != total {
 		t.Errorf("List size error")
