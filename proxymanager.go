@@ -29,6 +29,24 @@ type Proxy struct {
 	Type     string `json:"type"`
 }
 
+func (proxy Proxy) String() string {
+	return proxy.URL().String()
+}
+
+// URL return proxy url format
+func (proxy Proxy) URL() *url.URL {
+	userinfo := new(url.Userinfo)
+	resultURL := &url.URL{}
+	if proxy.Username != "" && proxy.Password != "" {
+		userinfo = url.UserPassword(proxy.Username, proxy.Password)
+	}
+
+	resultURL.Scheme = proxy.Type
+	resultURL.User = userinfo
+	resultURL.Host = fmt.Sprintf("%s:%s", proxy.Host, proxy.Port)
+	return resultURL
+}
+
 // Manager  object
 type Manager struct {
 	sync.Mutex // Embeding olarak ekleyelim.
@@ -140,15 +158,5 @@ func (p *Manager) GiveMeProxy() Proxy {
 // GiveMeProxyURL return proxy url
 func (p *Manager) GiveMeProxyURL() *url.URL {
 	proxy := p.GiveMeProxy()
-	userinfo := new(url.Userinfo)
-	resultURL := &url.URL{}
-	if proxy.Username != "" && proxy.Password != "" {
-		userinfo = url.UserPassword(proxy.Username, proxy.Password)
-	}
-
-	resultURL.Scheme = proxy.Type
-	resultURL.User = userinfo
-	resultURL.Host = fmt.Sprintf("%s:%s", proxy.Host, proxy.Port)
-
-	return resultURL
+	return proxy.URL()
 }

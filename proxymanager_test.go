@@ -8,6 +8,17 @@ import (
 	"github.com/akmyazilim/proxymanager"
 )
 
+func ExampleProxy_String() {
+	p := proxymanager.Proxy{
+		Type:     "http",
+		Host:     "10.0.0.1",
+		Port:     "1080",
+		Username: "username",
+		Password: "password",
+	}
+	fmt.Println(p)
+	// Output: http://username:password@10.0.0.1:1080
+}
 func ExampleManager_Has() {
 	u := "http://1.1.1.1:1010"
 	p := proxymanager.Proxy{

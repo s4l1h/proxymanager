@@ -85,17 +85,19 @@ func (checker *Checker) Check(p proxymanager.Proxy) bool {
 
 // Run run all checkers and return proxy manager
 func (checker *Checker) Run(manager *proxymanager.Manager) *proxymanager.Manager {
+	newManager := proxymanager.New(manager.Limit)
 	wg := sync.WaitGroup{}
 	for _, p := range manager.List {
 		wg.Add(1)
 		pp := p // range :S
 		go func(pp proxymanager.Proxy) {
 			defer wg.Done()
-			if checker.Check(pp) == false {
-				manager.Remove(pp)
+			if checker.Check(pp) != false {
+				//manager.Remove(pp)
+				newManager.Add(pp)
 			}
 		}(pp)
 	}
 	wg.Wait()
-	return manager
+	return newManager
 }
