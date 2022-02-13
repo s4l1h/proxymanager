@@ -1,4 +1,4 @@
-package checker
+s4l1hpackage checker
 
 import (
 	"sync"

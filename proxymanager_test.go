@@ -1,4 +1,4 @@
-package proxymanager_test
+s4l1hpackage proxymanager_test
 
 import (
 	"testing"

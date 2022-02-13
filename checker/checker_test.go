@@ -1,4 +1,4 @@
-package checker_test
+s4l1hpackage checker_test
 
 import (
 	"testing"
