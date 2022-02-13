@@ -1,4 +1,4 @@
-s4l1hpackage checker_test
+package checker_test
 
 import (
 	"testing"
@@ -7,8 +7,8 @@ import (
 
 	"fmt"
 
-	"github.com/akmyazilim/proxymanager"
-	"github.com/akmyazilim/proxymanager/checker"
+	"github.com/s4l1h/proxymanager"
+	"github.com/s4l1h/proxymanager/checker"
 )
 
 func ExampleChecker_Check() {

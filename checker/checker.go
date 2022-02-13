@@ -1,9 +1,9 @@
-s4l1hpackage checker
+package checker
 
 import (
 	"sync"
 
-	"github.com/akmyazilim/proxymanager"
+	"github.com/s4l1h/proxymanager"
 )
 
 // FunctionType checker fn type

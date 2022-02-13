@@ -1,4 +1,4 @@
-s4l1h# proxymanager
+# proxymanager
 ProxyManager
 Code Cover https://gocover.io/github.com/s4l1h/proxymanager
 

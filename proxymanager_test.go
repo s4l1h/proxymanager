@@ -1,11 +1,11 @@
-s4l1hpackage proxymanager_test
+package proxymanager_test
 
 import (
 	"testing"
 
 	"fmt"
 
-	"github.com/akmyazilim/proxymanager"
+	"github.com/s4l1h/proxymanager"
 )
 
 func ExampleProxy_String() {
